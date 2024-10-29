@@ -56,36 +56,44 @@ final class TxnRequestHandler
     public function handle(string $endpoint, TokenInterface $token, RequestInterface $req): ResponseInterface
     {
         $operator = $req->getOperator();
-        // Request headers
+
+        // oonstruct request headers
         $headers = [
             'country-code' => strtolower($operator->getCountryCode()),
             'mno-name' => $operator->getName(),
             'lang' => $req->getLang() ?? $operator->getLang() ?? 'fr',
             'channel' => $this->channel,
-            'Content-Type' => 'application/json',
-            'Authorization' => sprintf("Bearer %s", (string)$token),
+            'Authorization' => sprintf('Bearer %s', (string)$token),
         ];
 
-        // Request body
+        // construct request body
         $value = [
-            "currency" => "XOF",
-            "order_id" => sprintf("ayael_pay%s", $req->getTxn()),
-            "amount" => $req->getAmount(),
-            "return_url" => $req->getReturnURL(),
-            "cancel_url" => $req->getCancelURL(),
-            "reference" => $req->getTxn(),
+            'currency' => $operator->getCurrency(),
+            'order_id' => $req->getTxn(),
+            'amount' => $req->getAmount(),
+            'return_url' => $req->getReturnURL(),
+            'notif_url' => $req->getNotifyURL(),
+            'cancel_url' => $req->getCancelURL(),
+            'reference' => $req->getReference(),
         ];
 
-        $body = json_encode(
-            array_merge($value, [
-                'state' => urlencode($this->buildRequestState($value))
-            ])
-        );
-
-        print_r([$body]);
+        $body = array_merge($value, [
+            'state' => $this->buildRequestState($value)
+        ]);
 
         // Send HTTP request
-        return Client::new()->sendRequest(new Request('POST', $endpoint, $headers, $body));
+        return Client::new(
+            null,
+            [
+                'request' => [
+                    'timeout' => 1000,
+                    'headers' => $headers,
+                    'body' => $body
+                ]
+            ]
+        )
+            ->json()
+            ->sendRequest(new Request('POST', $endpoint));
     }
 
     /**
@@ -128,8 +136,8 @@ final class TxnRequestHandler
     {
         $array = [];
         foreach (static::sort($value) as $key => $value) {
-            $array[] = "$key=$value";
+            $array[] = '$key=$value';
         }
-        return implode("&", $array);
+        return implode('&', $array);
     }
 }

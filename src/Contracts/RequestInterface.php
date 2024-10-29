@@ -35,6 +35,14 @@ interface RequestInterface
 	public function getTxn();
 
 	/**
+	 * Returns invoice reference
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getReference();
+
+	/**
 	 * Returns payment page language configuration
 	 * 
 	 *
@@ -66,19 +74,11 @@ interface RequestInterface
 	 */
 	public function getCancelURL();
 
-	// /**
-	//  * Returns transaction reference property value
-	//  * 
-	//  *
-	//  * @return string
-	//  */
-	// public function getReference();
-
-	// /**
-	//  * Returns encoded request state
-	//  * 
-	//  *
-	//  * @return string
-	//  */
-	// public function getState();
+	/**
+	 * Returns request server notify endpoint
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getNotifyURL(): string;
 }

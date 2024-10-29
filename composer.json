@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "drewlabs/psr18": "^0.4.2",
+        "drewlabs/psr18": "^0.4.3",
         "drewlabs/psr7": "^0.2.4"
     }
 }

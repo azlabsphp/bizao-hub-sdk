@@ -48,6 +48,12 @@ final class Request implements RequestInterface
 	 */
 	private $cancel_url = null;
 
+	/** @var string|null */
+	private $notify_url;
+
+	/** @var string|null */
+	private $reference;
+
 	/**
 	 * Returns operator for the current request
 	 * 
@@ -70,6 +76,12 @@ final class Request implements RequestInterface
 	{
 		# code...
 		return $this->txn;
+	}
+
+	public function getReference()
+	{
+		# code...
+		return $this->reference;
 	}
 
 	/**
@@ -120,6 +132,11 @@ final class Request implements RequestInterface
 		return $this->cancel_url;
 	}
 
+	public function getNotifyURL(): string
+	{
+		return $this->notify_url;
+	}
+
 	/**
 	 * Set operator property value
 	 * 
@@ -149,6 +166,22 @@ final class Request implements RequestInterface
 		$self->txn = $value;
 		return $self;
 	}
+
+	/**
+	 * Set reference property value
+	 * 
+	 * @param string $value
+	 *
+	 * @return self
+	 */
+	public function withReference(string $value)
+	{
+		# code...
+		$self = clone $this;
+		$self->reference = $value;
+		return $self;
+	}
+
 
 	/**
 	 * Set lang property value
@@ -210,4 +243,18 @@ final class Request implements RequestInterface
 		return $self;
 	}
 
+	/**
+	 * Set notify_url property value
+	 * 
+	 * @param string|null $value
+	 *
+	 * @return self
+	 */
+	public function withNotifyURL(string|null $value)
+	{
+		# code...
+		$self = clone $this;
+		$self->notify_url = $value;
+		return $self;
+	}
 }
