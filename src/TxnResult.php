@@ -75,6 +75,9 @@ final class TxnResult implements PaymentResultInterface
 	/** @var Metadata */
 	private $meta = null;
 
+	/** @var string|null */
+	private $description;
+
 	/**
 	 * Returns boolean flag which equals true if request is successful
 	 * 
@@ -246,7 +249,8 @@ final class TxnResult implements PaymentResultInterface
 			'otp_code' => $this->otp_code,
 			'external_txn_id' => $this->external_txn_id,
 			'internal_txn_id' => $this->internal_txn_id,
-			'meta' => $this->meta ? $this->meta->toJson() : null
+			'meta' => $this->meta ? $this->meta->toJson() : null,
+			'description' => $this->description
 		];
 	}
 
@@ -271,6 +275,7 @@ final class TxnResult implements PaymentResultInterface
 		$self->otp_code = $json['otp_code'] ?? null;
 		$self->external_txn_id = $json['extTransaction-id'] ?? null;
 		$self->internal_txn_id = $json['intTransaction-id'] ?? null;
+		$self->description = $json['statusDescription'] ?? null;
 
 		return $self;
 	}

@@ -28,6 +28,17 @@ interface ChannelInterface
 	public function withCredentials(CredentialsInterface $value);
 
 	/**
+	 * Query for payment transaction using provided id
+	 * 
+	 * @param string $id
+	 * 
+	 * @return PaymentResultInterface 
+	 */
+	public function getTxnStatus(string $id): PaymentResultInterface;
+
+	/**
+	 * Send request to Bizao Hub to create payment transaction
+	 * 
 	 * @param RequestInterface|PageRequestInterface $req
 	 *
 	 * @return ChannelResponseInterface

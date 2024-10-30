@@ -50,20 +50,11 @@ final class HubClient
 	{
 		switch (strtolower($c)) {
 			case Channels::WEB:
-				return WebChannel::New(
-					$this->buildEndpoint('mobilemoney/v1'),
-					$this->createTokenHub()
-				);
+				return WebChannel::New($this->host, $this->createTokenHub());
 			case Channels::TPE:
-				return TPEChannel::New(
-					$this->buildEndpoint('mobilemoney/v1'),
-					$this->createTokenHub()
-				);
+				return TPEChannel::New($this->host, $this->createTokenHub());
 			case Channels::USSD:
-				return USSDPushChannel::New(
-					$this->buildEndpoint('mobilemoney/v1'),
-					$this->createTokenHub()
-				);
+				return USSDPushChannel::New($this->host, $this->createTokenHub());
 			default:
 				throw new InvalidArgumentException(sprintf("%s channel is not supported by the SDK", $c));
 		}
@@ -88,22 +79,6 @@ final class HubClient
 	 */
 	private function createTokenHub()
 	{
-		return new AccessTokenHub($this->buildEndpoint('token'));
-	}
-
-	/**
-	 * Build endpoint based on host property value
-	 * 
-	 * @param string $path
-	 * 
-	 * @return string 
-	 */
-	private function buildEndpoint(string $path): string
-	{
-		$host = $this->host;
-		if ($this->host[$length = strlen($this->host) - 1] === '/') {
-			$host = substr($this->host, 0, $length);
-		}
-		return sprintf("%s/%s", $host, $path);
+		return new AccessTokenHub(EndpointBuilder::New($this->host)->build('token'));
 	}
 }

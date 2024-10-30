@@ -2,7 +2,6 @@
 
 namespace Drewlabs\Bizao;
 
-use Drewlabs\Bizao\Contracts\RequestInterface;
 use Drewlabs\Bizao\Contracts\PageRequestInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
 use Drewlabs\Psr18\Client;

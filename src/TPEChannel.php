@@ -24,34 +24,28 @@ use Drewlabs\Psr7\ResponseReasonPhrase;
 
 final class TPEChannel implements ChannelInterface
 {
-
-	/**
-	 * @var CredentialsInterface
-	 */
-	private $credentials = null;
-
+	use ChecksTxnStatus;
+	use HasCredentials;
 
 	/** @var TokenHubInterface */
 	private $tokenHub = null;
 
-	/**
-	 * @var string
-	 */
-	private $endpoint = null;
+	/** @var string */
+	private $host = null;
 
 	/**
 	 * Creates new class instance
 	 * 
-	 * @param string $endpoint
+	 * @param string $host
 	 * @param TokenHubInterface $tokenHub
 	 * @param CredentialsInterface|null $credentials
 	 *
 	 * @return void
 	 */
-	public function __construct(string $endpoint, TokenHubInterface $tokenHub, CredentialsInterface $credentials = null)
+	public function __construct(string $host, TokenHubInterface $tokenHub, CredentialsInterface $credentials = null)
 	{
 		# code...
-		$this->endpoint = $endpoint;
+		$this->host = $host;
 		$this->tokenHub = $tokenHub;
 		$this->credentials = $credentials;
 	}
@@ -79,7 +73,7 @@ final class TPEChannel implements ChannelInterface
 			return $this->tokenHub->getAccessToken($this->credentials);
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::TPE)
-				->handle($this->endpoint, $token, $req, 
+				->handle(EndpointBuilder::New($this->host)->build('mobilemoney/v1'), $token, $req, 
 				function (&$headers, &$body) use ($req) {
 					$body['user_msisdn'] = $req->getMsiSdn();
 					$body['otp_code'] = $req->getOTP();
@@ -93,20 +87,5 @@ final class TPEChannel implements ChannelInterface
 		})->catch(function (\Throwable $e) {
 			throw new RequestException($e->getMessage(), $e->getCode());
 		})->resolve();
-	}
-
-	/**
-	 * Set credentials property value
-	 * 
-	 * @param CredentialsInterface $value
-	 *
-	 * @return self
-	 */
-	public function withCredentials(CredentialsInterface $value)
-	{
-		# code...
-		$self = clone $this;
-		$self->credentials = $value;
-		return $self;
 	}
 }
