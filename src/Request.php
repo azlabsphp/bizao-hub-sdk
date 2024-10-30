@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao;
 
-use Drewlabs\Bizao\Contracts\RequestInterface;
 use Drewlabs\Bizao\Contracts\OperatorInterface;
+use Drewlabs\Bizao\Contracts\PushRequestInterface;
 
-final class Request implements RequestInterface
+final class Request implements PushRequestInterface
 {
 	/**
 	 * @var OperatorInterface
@@ -53,6 +53,22 @@ final class Request implements RequestInterface
 
 	/** @var string|null */
 	private $reference;
+
+	/** @var string|null */
+	private $msi_sdn;
+
+	/** @var string|null */
+	private $otp;
+
+	public function getMsiSdn()
+	{
+		return $this->msi_sdn;
+	}
+
+	public function getOTP()
+	{
+		return $this->otp;
+	}
 
 	/**
 	 * Returns operator for the current request
@@ -255,6 +271,36 @@ final class Request implements RequestInterface
 		# code...
 		$self = clone $this;
 		$self->notify_url = $value;
+		return $self;
+	}
+
+	/**
+	 * Set msi_sdn property value
+	 * 
+	 * @param string $value
+	 *
+	 * @return self
+	 */
+	public function withMsiSdn(string $value)
+	{
+		# code...
+		$self = clone $this;
+		$self->msi_sdn = $value;
+		return $self;
+	}
+
+	/**
+	 * Set otp property value
+	 * 
+	 * @param string $value
+	 *
+	 * @return self
+	 */
+	public function withOtp(string $value)
+	{
+		# code...
+		$self = clone $this;
+		$self->otp = $value;
 		return $self;
 	}
 }

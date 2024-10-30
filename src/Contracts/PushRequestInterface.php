@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao\Contracts;
 
-interface PushRequestInterface
+interface PushRequestInterface extends RequestInterface
 {
-
 	/**
 	 * Returns MSI SDN identifier of the user paying the invoice
 	 * 

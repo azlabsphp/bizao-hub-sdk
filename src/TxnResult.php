@@ -15,7 +15,7 @@ namespace Drewlabs\Bizao;
 
 use Drewlabs\Bizao\Contracts\PaymentResultInterface;
 
-final class PaymentResult implements PaymentResultInterface
+final class TxnResult implements PaymentResultInterface
 {
 
 	/**
@@ -72,6 +72,9 @@ final class PaymentResult implements PaymentResultInterface
 	 * @var string|null
 	 */
 	private $internal_txn_id = null;
+
+	/** @var Metadata */
+	private $meta = null;
 
 	/**
 	 * Returns boolean flag which equals true if request is successful
@@ -205,6 +208,16 @@ final class PaymentResult implements PaymentResultInterface
 	}
 
 	/**
+	 * Returns transaction result metadata
+	 * 
+	 * @return null|Metadata 
+	 */
+	public function getMetadata(): ?Metadata
+	{
+		return $this->meta;
+	}
+
+	/**
 	 * Returns a dictionnary/hash map representation of the current instance
 	 * 
 	 *
@@ -225,6 +238,7 @@ final class PaymentResult implements PaymentResultInterface
 			'otp_code' => $this->otp_code,
 			'external_txn_id' => $this->external_txn_id,
 			'internal_txn_id' => $this->internal_txn_id,
+			'meta' => $this->meta ? $this->meta->toJson() : null
 		];
 	}
 
@@ -237,6 +251,7 @@ final class PaymentResult implements PaymentResultInterface
 	{
 		# code...
 		$self = new static;
+		$self->meta = Metadata::fromJson($json['meta'] ?? []);
 		$self->status = $json['status'] ?? null;
 		$self->amount = $json['amount'] ?? null;
 		$self->txn = $json['txn'] ?? null;
@@ -248,6 +263,7 @@ final class PaymentResult implements PaymentResultInterface
 		$self->otp_code = $json['otp_code'] ?? null;
 		$self->external_txn_id = $json['external_txn_id'] ?? null;
 		$self->internal_txn_id = $json['internal_txn_id'] ?? null;
+
 		return $self;
 	}
 }

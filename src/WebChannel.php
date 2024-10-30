@@ -16,7 +16,6 @@ namespace Drewlabs\Bizao;
 use BadMethodCallException;
 use Drewlabs\Bizao\Contracts\ChannelInterface;
 use Drewlabs\Bizao\Contracts\CredentialsInterface;
-use Drewlabs\Bizao\Contracts\ChannelResponseInterface;
 use Drewlabs\Bizao\Contracts\RequestInterface;
 use Drewlabs\Bizao\Contracts\TokenHubInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
@@ -71,11 +70,6 @@ final class WebChannel implements ChannelInterface
         return new static($endpoint, $tokenHub, $credentials);
     }
 
-	/**
-	 * @param RequestInterface $req
-	 *
-	 * @return ChannelResponseInterface
-	 */
 	public function sendRequest(RequestInterface $req)
 	{
 		if (is_null($this->credentials)) {

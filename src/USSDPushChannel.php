@@ -16,8 +16,7 @@ namespace Drewlabs\Bizao;
 use BadMethodCallException;
 use Drewlabs\Bizao\Contracts\ChannelInterface;
 use Drewlabs\Bizao\Contracts\CredentialsInterface;
-use Drewlabs\Bizao\Contracts\ChannelResponseInterface;
-use Drewlabs\Bizao\Contracts\RequestInterface;
+use Drewlabs\Bizao\Contracts\PushRequestInterface;
 use Drewlabs\Bizao\Contracts\TokenHubInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
 use Drewlabs\Bizao\Exceptions\RequestException;
@@ -25,7 +24,6 @@ use Drewlabs\Psr7\ResponseReasonPhrase;
 
 final class USSDPushChannel implements ChannelInterface
 {
-
 	/**
 	 * @var CredentialsInterface
 	 */
@@ -71,12 +69,7 @@ final class USSDPushChannel implements ChannelInterface
 		return new static($endpoint, $tokenHub, $credentials);
 	}
 
-	/**
-	 * @param RequestInterface $req
-	 *
-	 * @return ChannelResponseInterface
-	 */
-	public function sendRequest(RequestInterface $req)
+	public function sendRequest(PushRequestInterface $req)
 	{
 		if (is_null($this->credentials)) {
 			throw new BadMethodCallException('Please call withCredentials(...) with the authentication credentials beforce calling this method');
@@ -85,12 +78,20 @@ final class USSDPushChannel implements ChannelInterface
 			return $this->tokenHub->getAccessToken($this->credentials);
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::USSD)
-				->handle($this->endpoint, $token, $req);
+				->handle(
+					$this->endpoint,
+					$token,
+					$req,
+					function (&$_, &$body) use ($req) {
+						$body['user_msisdn'] = $req->getMsiSdn();
+						$body['otp_code'] = $req->getOTP();
+					}
+				);
 			$statusCode = $response->getStatusCode();
 			if ($statusCode < 200 || $statusCode > 204) {
 				throw new RequestException(sprintf("%s : %s", ResponseReasonPhrase::getPrase($statusCode), $response->getBody()->__toString()), $statusCode);
 			}
-			return Page::fromJson(json_decode($response->getBody()->__toString(), true));
+			return TxnResult::fromJson(json_decode($response->getBody()->__toString(), true));
 		})->catch(function (\Throwable $e) {
 			throw new RequestException($e->getMessage(), $e->getCode());
 		})->resolve();

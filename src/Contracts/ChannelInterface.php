@@ -28,9 +28,9 @@ interface ChannelInterface
 	public function withCredentials(CredentialsInterface $value);
 
 	/**
-	 * @param RequestInterface $req
+	 * @param PushRequestInterface|RequestInterface $req
 	 *
 	 * @return ChannelResponseInterface
 	 */
-	public function sendRequest(RequestInterface $req);
+	public function sendRequest(PushRequestInterface $req);
 }

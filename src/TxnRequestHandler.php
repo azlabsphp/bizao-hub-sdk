@@ -2,6 +2,7 @@
 
 namespace Drewlabs\Bizao;
 
+use Drewlabs\Bizao\Contracts\PushRequestInterface;
 use Drewlabs\Bizao\Contracts\RequestInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
 use Drewlabs\Psr18\Client;
@@ -45,7 +46,9 @@ final class TxnRequestHandler
      * 
      * @param string $endpoint 
      * @param TokenInterface $token 
-     * @param RequestInterface $req 
+     * @param RequestInterface $req
+     * @param callable|\Closure(array $headers, array $body):void $before
+     * 
      * @return ResponseInterface 
      * @throws ReflectionException 
      * @throws InvalidArgumentException 
@@ -53,7 +56,7 @@ final class TxnRequestHandler
      * @throws NetworkException 
      * @throws RequestException 
      */
-    public function handle(string $endpoint, TokenInterface $token, RequestInterface $req): ResponseInterface
+    public function handle(string $endpoint, TokenInterface $token, RequestInterface $req, callable $before = null): ResponseInterface
     {
         $operator = $req->getOperator();
 
@@ -67,7 +70,7 @@ final class TxnRequestHandler
         ];
 
         // construct request body
-        $value = [
+        $body = [
             'currency' => $operator->getCurrency(),
             'order_id' => $req->getTxn(),
             'amount' => $req->getAmount(),
@@ -77,9 +80,14 @@ final class TxnRequestHandler
             'reference' => $req->getReference(),
         ];
 
-        $body = array_merge($value, [
-            'state' => $this->buildRequestState($value)
-        ]);
+        $body = array_merge($body, ['state' => $this->buildRequestState($body)]);
+
+        // If before function is provided call on the reference of headers and body
+        if (!is_null($before)) {
+            (function (&$h, $b) use (&$before) {
+                $before($h, $b);
+            })($headers, $body);
+        }
 
         // Send HTTP request
         return Client::new(

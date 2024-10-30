@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao;
 
+use BadMethodCallException;
 use Drewlabs\Bizao\Contracts\ChannelInterface;
 use Drewlabs\Bizao\Contracts\CredentialsInterface;
-use Drewlabs\Bizao\Contracts\ChannelResponseInterface;
-use Drewlabs\Bizao\Contracts\RequestInterface;
+use Drewlabs\Bizao\Contracts\PushRequestInterface;
 use Drewlabs\Bizao\Contracts\TokenHubInterface;
+use Drewlabs\Bizao\Contracts\TokenInterface;
+use Drewlabs\Bizao\Exceptions\RequestException;
+use Drewlabs\Psr7\ResponseReasonPhrase;
 
 final class TPEChannel implements ChannelInterface
 {
@@ -67,14 +70,28 @@ final class TPEChannel implements ChannelInterface
 		return new static($endpoint, $tokenHub, $credentials);
 	}
 
-	/**
-	 * @param RequestInterface $req
-	 *
-	 * @return ChannelResponseInterface
-	 */
-	public function sendRequest(RequestInterface $req)
+	public function sendRequest(PushRequestInterface $req)
 	{
-		# code...
+		if (is_null($this->credentials)) {
+			throw new BadMethodCallException('Please call withCredentials(...) with the authentication credentials beforce calling this method');
+		}
+		return Middleware::New(function () {
+			return $this->tokenHub->getAccessToken($this->credentials);
+		})->then(function (TokenInterface $token) use ($req) {
+			$response = TxnRequestHandler::New(Channels::TPE)
+				->handle($this->endpoint, $token, $req, 
+				function (&$_, &$body) use ($req) {
+					$body['user_msisdn'] = $req->getMsiSdn();
+					$body['otp_code'] = $req->getOTP();
+				});
+			$statusCode = $response->getStatusCode();
+			if ($statusCode < 200 || $statusCode > 204) {
+				throw new RequestException(sprintf("%s : %s", ResponseReasonPhrase::getPrase($statusCode), $response->getBody()->__toString()), $statusCode);
+			}
+			return TxnResult::fromJson(json_decode($response->getBody()->__toString(), true));
+		})->catch(function (\Throwable $e) {
+			throw new RequestException($e->getMessage(), $e->getCode());
+		})->resolve();
 	}
 
 	/**
