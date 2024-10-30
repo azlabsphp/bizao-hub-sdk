@@ -22,6 +22,6 @@ interface ChannelResponseInterface
 	 *
 	 * @return bool
 	 */
-	public function ok();
+	public function isOk();
 
 }

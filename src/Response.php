@@ -24,7 +24,7 @@ final class Response implements ChannelResponseInterface
 	 *
 	 * @return bool
 	 */
-	public function ok()
+	public function isOk()
 	{
 		# code...
 	}

@@ -13,8 +13,14 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao\Contracts;
 
-interface PaymentResultInterface extends ChannelResponseInterface
+interface TxnResultInterface extends ChannelResponseInterface
 {
+
+	/** Returns True if transaction is marked as completed on BIZAO Hub platform or False else */
+	public function isOk(): bool;
+
+	/** Returns True if transaction is in pending state or False else */
+	public function isPending(): bool;
 
 	/**
 	 * Returns invoice order or transaction id

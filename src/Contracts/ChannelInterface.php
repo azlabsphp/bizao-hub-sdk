@@ -31,10 +31,13 @@ interface ChannelInterface
 	 * Query for payment transaction using provided id
 	 * 
 	 * @param string $id
+	 * @param OperatorInterface $operator
 	 * 
-	 * @return PaymentResultInterface 
+	 * @return TxnResultInterface 
+	 * 
+	 * @throws \Drewlabs\Bizao\Exceptions\RequestException
 	 */
-	public function getTxnStatus(string $id): PaymentResultInterface;
+	public function getTxnStatus(OperatorInterface $operator, string $id): TxnResultInterface;
 
 	/**
 	 * Send request to Bizao Hub to create payment transaction
@@ -42,6 +45,8 @@ interface ChannelInterface
 	 * @param RequestInterface|PageRequestInterface $req
 	 *
 	 * @return ChannelResponseInterface
+	 * 
+	 * @throws \Drewlabs\Bizao\Exceptions\RequestException
 	 */
 	public function sendRequest(RequestInterface $req);
 }

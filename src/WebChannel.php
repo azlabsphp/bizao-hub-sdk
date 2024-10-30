@@ -33,6 +33,9 @@ final class WebChannel implements ChannelInterface
 	/** @var string */
 	private $host = null;
 
+	/** @var string */
+	private $channel = Channels::WEB;
+
 	/**
 	 * Creates new class instance
 	 * 

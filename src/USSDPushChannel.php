@@ -33,6 +33,9 @@ final class USSDPushChannel implements ChannelInterface
 	/** @var string */
 	private $host = null;
 
+	/** @var string */
+	private $channel = Channels::USSD;
+
 	/**
 	 * Creates new class instance
 	 * 

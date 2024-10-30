@@ -33,6 +33,9 @@ final class TPEChannel implements ChannelInterface
 	/** @var string */
 	private $host = null;
 
+	/** @var string */
+	private $channel = Channels::TPE;
+
 	/**
 	 * Creates new class instance
 	 * 

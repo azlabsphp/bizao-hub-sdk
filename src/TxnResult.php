@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao;
 
-use Drewlabs\Bizao\Contracts\PaymentResultInterface;
+use Drewlabs\Bizao\Contracts\TxnResultInterface;
 
-final class TxnResult implements PaymentResultInterface
+final class TxnResult implements TxnResultInterface
 {
 	/**
 	 * @var string
@@ -78,22 +78,12 @@ final class TxnResult implements PaymentResultInterface
 	/** @var string|null */
 	private $description;
 
-	/**
-	 * Returns boolean flag which equals true if request is successful
-	 * 
-	 * @return bool
-	 */
-	public function ok()
+	public function isOk(): bool
 	{
 		return !in_array(strtolower($this->status), [TxnStatus::ABANDONED, TxnStatus::CANCELED, TxnStatus::FAILED]);
 	}
 
-	/**
-	 * Returns a boolean flag which equals true if transaction is pending
-	 * 
-	 * @return bool 
-	 */
-	public function isPending()
+	public function isPending(): bool
 	{
 		return in_array(strtolower($this->status), [TxnStatus::INPROGRESS, TxnStatus::LOADED, TxnStatus::INITIATED]);
 	}
