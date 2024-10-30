@@ -16,7 +16,7 @@ namespace Drewlabs\Bizao;
 use Drewlabs\Bizao\Contracts\OperatorInterface;
 use Drewlabs\Bizao\Contracts\RequestInterface;
 
-final class Request implements RequestInterface
+final class TxnRequest implements RequestInterface
 {
 	/**
 	 * @var OperatorInterface

@@ -27,18 +27,21 @@ trait ChecksTxnStatus
         return Middleware::New(function () {
             return $this->tokenHub->getAccessToken($this->credentials);
         })->then(function (TokenInterface $token) use ($operator, $id) {
-            $response = Client::new()
+            $response = Client::new(null, [
+                'request' => [
+                    'headers' => [
+                        'Authorization' => sprintf('Bearer %s', (string)$token),
+                        'country-code' => $operator->getCountryCode(),
+                        'mno-name' => $operator->getName(),
+                        'channel' => $this->channel
+                    ]
+                ]
+            ])
                 ->json()
                 ->sendRequest(
                     new Request(
                         'GET',
-                        EndpointBuilder::New($this->host)->build(sprintf('mobilemoney/v1/getStatus/%s', $id)),
-                        [
-                            'Authorization' => sprintf('Bearer %s', (string)$token),
-                            'country-code' => $operator->getCountryCode(),
-                            'mno-name' => $operator->getName(),
-                            'channel' => $this->channel
-                            ]
+                        EndpointBuilder::New($this->host)->build(sprintf('mobilemoney/v1/getStatus/%s', $id))
                     )
                 );
             $statusCode = $response->getStatusCode();
