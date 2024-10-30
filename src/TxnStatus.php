@@ -25,13 +25,13 @@ final class TxnStatus
     const INPROGRESS = 'inprogress';
 
     /** @var string */
-    const FAILED = 'failed';
-
-    /** @var string */
     const SUCCESSFUL = 'successful';
 
     /** @var string */
     const CANCELED = 'canceled';
+
+    /** @var string */
+    const FAILED = 'failed';
 
     /** @var string */
     const ABANDONED  = 'abandoned';

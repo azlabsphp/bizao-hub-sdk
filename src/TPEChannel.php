@@ -16,7 +16,7 @@ namespace Drewlabs\Bizao;
 use BadMethodCallException;
 use Drewlabs\Bizao\Contracts\ChannelInterface;
 use Drewlabs\Bizao\Contracts\CredentialsInterface;
-use Drewlabs\Bizao\Contracts\PushRequestInterface;
+use Drewlabs\Bizao\Contracts\RequestInterface;
 use Drewlabs\Bizao\Contracts\TokenHubInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
 use Drewlabs\Bizao\Exceptions\RequestException;
@@ -70,7 +70,7 @@ final class TPEChannel implements ChannelInterface
 		return new static($endpoint, $tokenHub, $credentials);
 	}
 
-	public function sendRequest(PushRequestInterface $req)
+	public function sendRequest(RequestInterface $req)
 	{
 		if (is_null($this->credentials)) {
 			throw new BadMethodCallException('Please call withCredentials(...) with the authentication credentials beforce calling this method');
@@ -80,9 +80,10 @@ final class TPEChannel implements ChannelInterface
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::TPE)
 				->handle($this->endpoint, $token, $req, 
-				function (&$_, &$body) use ($req) {
+				function (&$headers, &$body) use ($req) {
 					$body['user_msisdn'] = $req->getMsiSdn();
 					$body['otp_code'] = $req->getOTP();
+					return [$headers, $body];
 				});
 			$statusCode = $response->getStatusCode();
 			if ($statusCode < 200 || $statusCode > 204) {

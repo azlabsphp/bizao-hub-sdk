@@ -2,8 +2,8 @@
 
 namespace Drewlabs\Bizao;
 
-use Drewlabs\Bizao\Contracts\PushRequestInterface;
 use Drewlabs\Bizao\Contracts\RequestInterface;
+use Drewlabs\Bizao\Contracts\PageRequestInterface;
 use Drewlabs\Bizao\Contracts\TokenInterface;
 use Drewlabs\Psr18\Client;
 use Drewlabs\Psr7\Exceptions\NetworkException;
@@ -46,8 +46,8 @@ final class TxnRequestHandler
      * 
      * @param string $endpoint 
      * @param TokenInterface $token 
-     * @param RequestInterface $req
-     * @param callable|\Closure(array $headers, array $body):void $before
+     * @param PageRequestInterface $req
+     * @param callable|\Closure(array $headers, array $body):[array,array] $before
      * 
      * @return ResponseInterface 
      * @throws ReflectionException 
@@ -56,7 +56,7 @@ final class TxnRequestHandler
      * @throws NetworkException 
      * @throws RequestException 
      */
-    public function handle(string $endpoint, TokenInterface $token, RequestInterface $req, callable $before = null): ResponseInterface
+    public function handle(string $endpoint, TokenInterface $token, PageRequestInterface $req, callable $before = null): ResponseInterface
     {
         $operator = $req->getOperator();
 
@@ -84,9 +84,7 @@ final class TxnRequestHandler
 
         // If before function is provided call on the reference of headers and body
         if (!is_null($before)) {
-            (function (&$h, $b) use (&$before) {
-                $before($h, $b);
-            })($headers, $body);
+            list($headers, $body) = $before($headers, $body);
         }
 
         // Send HTTP request
@@ -144,7 +142,7 @@ final class TxnRequestHandler
     {
         $array = [];
         foreach (static::sort($value) as $key => $value) {
-            $array[] = '$key=$value';
+            $array[] = "$key=$value";
         }
         return implode('&', $array);
     }

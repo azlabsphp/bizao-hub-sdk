@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Bizao\Contracts;
 
 use Drewlabs\Bizao\Contracts\ChannelResponseInterface;
-use Drewlabs\Bizao\Contracts\RequestInterface;
+use Drewlabs\Bizao\Contracts\PageRequestInterface;
 
 interface ChannelInterface
 {
@@ -28,9 +28,9 @@ interface ChannelInterface
 	public function withCredentials(CredentialsInterface $value);
 
 	/**
-	 * @param PushRequestInterface|RequestInterface $req
+	 * @param RequestInterface|PageRequestInterface $req
 	 *
 	 * @return ChannelResponseInterface
 	 */
-	public function sendRequest(PushRequestInterface $req);
+	public function sendRequest(RequestInterface $req);
 }

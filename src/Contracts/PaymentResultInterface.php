@@ -19,7 +19,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns invoice order or transaction id
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getTxn();
@@ -27,7 +26,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns amount property value
 	 * 
-	 *
 	 * @return float
 	 */
 	public function getAmount();
@@ -35,7 +33,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns payment currency property value
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getCurrency();
@@ -43,7 +40,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns transaction reference property value
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getReference();
@@ -51,14 +47,12 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns payment ISO3166 country code property value
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getCountryCode();
 
 	/**
 	 * Returns MSI SDN identifier of the user who paid the invoice
-	 * 
 	 *
 	 * @return string
 	 */
@@ -67,7 +61,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns the OTP code of the push request
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getOTP();
@@ -75,14 +68,12 @@ interface PaymentResultInterface extends ChannelResponseInterface
 	/**
 	 * Returns encoded request state
 	 * 
-	 *
 	 * @return string
 	 */
 	public function getState();
 
 	/**
 	 * Returns internal Bizao hub transaction id 
-	 * 
 	 *
 	 * @return ?string
 	 */
@@ -90,7 +81,6 @@ interface PaymentResultInterface extends ChannelResponseInterface
 
 	/**
 	 * Returns external Bizao hub transaction id
-	 * 
 	 *
 	 * @return ?string
 	 */

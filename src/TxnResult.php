@@ -17,7 +17,6 @@ use Drewlabs\Bizao\Contracts\PaymentResultInterface;
 
 final class TxnResult implements PaymentResultInterface
 {
-
 	/**
 	 * @var string
 	 */
@@ -79,12 +78,21 @@ final class TxnResult implements PaymentResultInterface
 	/**
 	 * Returns boolean flag which equals true if request is successful
 	 * 
-	 *
 	 * @return bool
 	 */
 	public function ok()
 	{
 		return !in_array(strtolower($this->status), [TxnStatus::ABANDONED, TxnStatus::CANCELED, TxnStatus::FAILED]);
+	}
+
+	/**
+	 * Returns a boolean flag which equals true if transaction is pending
+	 * 
+	 * @return bool 
+	 */
+	public function isPending()
+	{
+		return in_array(strtolower($this->status), [TxnStatus::INPROGRESS, TxnStatus::LOADED, TxnStatus::INITIATED]);
 	}
 
 	/**
@@ -254,15 +262,15 @@ final class TxnResult implements PaymentResultInterface
 		$self->meta = Metadata::fromJson($json['meta'] ?? []);
 		$self->status = $json['status'] ?? null;
 		$self->amount = $json['amount'] ?? null;
-		$self->txn = $json['txn'] ?? null;
+		$self->txn = $json['order-id'] ?? null;
 		$self->currency = $json['currency'] ?? null;
 		$self->reference = $json['reference'] ?? null;
-		$self->country_code = $json['country_code'] ?? null;
+		$self->country_code = $json['country-code'] ?? null;
 		$self->state = $json['state'] ?? null;
-		$self->msi_sdn = $json['msi_sdn'] ?? null;
+		$self->msi_sdn = $json['user_msisdn'] ?? null;
 		$self->otp_code = $json['otp_code'] ?? null;
-		$self->external_txn_id = $json['external_txn_id'] ?? null;
-		$self->internal_txn_id = $json['internal_txn_id'] ?? null;
+		$self->external_txn_id = $json['extTransaction-id'] ?? null;
+		$self->internal_txn_id = $json['intTransaction-id'] ?? null;
 
 		return $self;
 	}

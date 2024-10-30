@@ -13,72 +13,20 @@ declare(strict_types=1);
 
 namespace Drewlabs\Bizao\Contracts;
 
-use Drewlabs\Bizao\Contracts\OperatorInterface;
-
-interface RequestInterface
+interface RequestInterface extends PageRequestInterface
 {
-
 	/**
-	 * Returns operator for the current request
+	 * Returns MSI SDN identifier of the user paying the invoice
 	 * 
-	 *
-	 * @return OperatorInterface
-	 */
-	public function getOperator(): OperatorInterface;
-
-	/**
-	 * Returns invoice order or transaction id
-	 * 
-	 *
 	 * @return string
 	 */
-	public function getTxn();
+	public function getMsiSdn();
 
 	/**
-	 * Returns invoice reference
+	 * Returns the OTP code of the push request
 	 * 
-	 *
 	 * @return string
 	 */
-	public function getReference();
+	public function getOTP();
 
-	/**
-	 * Returns payment page language configuration
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getLang();
-
-	/**
-	 * Returns invoice amount value
-	 * 
-	 *
-	 * @return float
-	 */
-	public function getAmount();
-
-	/**
-	 * Returns successful payment return/notification url
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getReturnURL();
-
-	/**
-	 * Returns cancelled payment return/notification url
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getCancelURL();
-
-	/**
-	 * Returns request server notify endpoint
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getNotifyURL(): string;
 }

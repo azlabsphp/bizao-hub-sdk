@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Drewlabs\Bizao;
 
 use Drewlabs\Bizao\Contracts\OperatorInterface;
-use Drewlabs\Bizao\Contracts\PushRequestInterface;
+use Drewlabs\Bizao\Contracts\RequestInterface;
 
-final class Request implements PushRequestInterface
+final class Request implements RequestInterface
 {
 	/**
 	 * @var OperatorInterface
