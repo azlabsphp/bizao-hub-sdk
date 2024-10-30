@@ -26,18 +26,18 @@ final class AccessTokenHub implements TokenHubInterface
 	/**
 	 * @var string
 	 */
-	private $endpoint = null;
+	private $host = null;
 
 	/**
 	 * Creates new class instance
 	 * 
-	 * @param stirng $endpoint
+	 * @param stirng $host
 	 * @return void
 	 */
-	public function __construct(string $endpoint)
+	public function __construct(string $host)
 	{
 		# code...
-		$this->endpoint = $endpoint;
+		$this->host = $host;
 	}
 
 	/**
@@ -51,7 +51,7 @@ final class AccessTokenHub implements TokenHubInterface
 	{
 		# code...
 		$response = Client::new()->sendRequest(
-			new Request('POST', sprintf("%s?grant_type=client_credentials", $this->endpoint), [
+			new Request('POST', sprintf("%s?grant_type=client_credentials", EndpointBuilder::New($this->host)->build('token')), [
 				'Content-Type' => 'application/x-www-form-urlencoded',
 				'Authorization' => sprintf("Basic %s", (string)$credentials)
 			])

@@ -79,6 +79,6 @@ final class HubClient
 	 */
 	private function createTokenHub()
 	{
-		return new AccessTokenHub(EndpointBuilder::New($this->host)->build('token'));
+		return new AccessTokenHub($this->host);
 	}
 }
