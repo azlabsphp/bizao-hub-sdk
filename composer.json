@@ -1,25 +1,29 @@
 {
-    "name": "drewlabs/bizao",
-    "description": "BIZAO payment platform PHP client",
-    "type": "library",
-    "require-dev": {
-        "phpunit/phpunit": "^11.4",
-        "drewlabs/mdl-cli": "^0.3.0"
-    },
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Drewlabs\\Bizao\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "azandrew-sidoine",
-            "email": "azandrewdevelopper@gmail.com"
-        }
-    ],
-    "require": {
-        "drewlabs/psr18": "^0.4.3",
-        "drewlabs/psr7": "^0.2.4"
+  "name": "drewlabs/php-bizao-sdk",
+  "description": "Bizao payment hub PHP client",
+  "type": "library",
+  "require-dev": {
+    "phpunit/phpunit": "^11.4",
+    "drewlabs/mdl-cli": "^0.3.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Drewlabs\\Bizao\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "azandrew-sidoine",
+      "email": "azandrewdevelopper@gmail.com"
+    }
+  ],
+  "require": {
+    "drewlabs/psr18": "^0.4.3",
+    "drewlabs/psr7": "^0.2.4"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
 }
