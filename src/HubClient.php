@@ -15,6 +15,7 @@ namespace Drewlabs\Bizao;
 
 use InvalidArgumentException;
 use Drewlabs\Bizao\Contracts\ChannelInterface;
+use Drewlabs\Bizao\Contracts\HasApiVersionning;
 
 final class HubClient
 {
@@ -44,7 +45,7 @@ final class HubClient
 	 * 
 	 * @param string $c
 	 *
-	 * @return ChannelInterface
+	 * @return ChannelInterface&HasApiVersionning
 	 */
 	public function channel(string $c)
 	{

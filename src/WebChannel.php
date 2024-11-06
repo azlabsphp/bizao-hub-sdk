@@ -26,6 +26,7 @@ final class WebChannel implements ChannelInterface
 {
 	use ChecksTxnStatus;
 	use HasCredentials;
+	use ProvidesApiVersioning;
 
 	/** @var TokenHubInterface */
 	private $tokenHub = null;
@@ -62,10 +63,10 @@ final class WebChannel implements ChannelInterface
 	 * 
 	 * @return static 
 	 */
-    public static function New(string $endpoint, TokenHubInterface $tokenHub, CredentialsInterface $credentials = null)
-    {
-        return new static($endpoint, $tokenHub, $credentials);
-    }
+	public static function New(string $endpoint, TokenHubInterface $tokenHub, CredentialsInterface $credentials = null)
+	{
+		return new static($endpoint, $tokenHub, $credentials);
+	}
 
 	public function sendRequest(PageRequestInterface $req)
 	{
@@ -76,7 +77,7 @@ final class WebChannel implements ChannelInterface
 			return $this->tokenHub->getAccessToken($this->credentials);
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::WEB)
-				->handle(EndpointBuilder::New($this->host)->build('mobilemoney/v1'), $token, $req);
+				->handle(EndpointBuilder::New($this->host)->build("mobilemoney/$this->version"), $token, $req);
 			$statusCode = $response->getStatusCode();
 			if ($statusCode < 200 || $statusCode > 204) {
 				throw new RequestException(sprintf("%s : %s", ResponseReasonPhrase::getPrase($statusCode), $response->getBody()->__toString()), $statusCode);

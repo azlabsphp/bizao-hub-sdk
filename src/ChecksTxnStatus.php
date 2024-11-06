@@ -19,6 +19,8 @@ use Drewlabs\Psr7\ResponseReasonPhrase;
  */
 trait ChecksTxnStatus
 {
+    use ProvidesApiVersioning;
+
     public function getTxnStatus(OperatorInterface $operator, string $id): TxnResultInterface
     {
         if (is_null($this->credentials)) {
@@ -41,7 +43,7 @@ trait ChecksTxnStatus
                 ->sendRequest(
                     new Request(
                         'GET',
-                        EndpointBuilder::New($this->host)->build(sprintf('mobilemoney/v1/getStatus/%s', $id))
+                        EndpointBuilder::New($this->host)->build(sprintf('mobilemoney/%s/getStatus/%s', $this->version, $id))
                     )
                 );
             $statusCode = $response->getStatusCode();

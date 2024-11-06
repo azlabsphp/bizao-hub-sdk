@@ -26,6 +26,7 @@ final class TPEChannel implements ChannelInterface
 {
 	use ChecksTxnStatus;
 	use HasCredentials;
+	use ProvidesApiVersioning;
 
 	/** @var TokenHubInterface */
 	private $tokenHub = null;
@@ -76,7 +77,7 @@ final class TPEChannel implements ChannelInterface
 			return $this->tokenHub->getAccessToken($this->credentials);
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::TPE)
-				->handle(EndpointBuilder::New($this->host)->build('mobilemoney/v1'), $token, $req, 
+				->handle(EndpointBuilder::New($this->host)->build("mobilemoney/$this->version"), $token, $req, 
 				function (&$headers, &$body) use ($req) {
 					$body['user_msisdn'] = $req->getMsiSdn();
 					$body['otp_code'] = $req->getOTP();

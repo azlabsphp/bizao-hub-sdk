@@ -26,6 +26,7 @@ final class USSDPushChannel implements ChannelInterface
 {
 	use ChecksTxnStatus;
 	use HasCredentials;
+	use ProvidesApiVersioning;
 
 	/** @var TokenHubInterface */
 	private $tokenHub = null;
@@ -77,7 +78,7 @@ final class USSDPushChannel implements ChannelInterface
 		})->then(function (TokenInterface $token) use ($req) {
 			$response = TxnRequestHandler::New(Channels::USSD)
 				->handle(
-					EndpointBuilder::New($this->host)->build('mobilemoney/v1'),
+					EndpointBuilder::New($this->host)->build("mobilemoney/$this->version"),
 					$token,
 					$req,
 					function (&$headers, &$body) use ($req) {
